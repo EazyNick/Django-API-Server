@@ -16,6 +16,10 @@ class Question(models.Model):
     #average_score = models.FloatField(default=0.0) # 소수값 필드
     # python manage.py migrate polls 0001, 위에 2가지를 추가하고 마이그레이션하면 0002가 생기는데, 0001로 되돌리고, 변경 코드를 지워주면 다시 돌아감 
 
+    # 이게 없으면 디폴트 값으로 값이 저장되어, 우리가 만든 값이 무엇인지 알기가 어려워서, 이름을 지정할 수 있다.
+    def __str__(self):
+        return f'제목: {self.question_text}, 날짜: {self.pub_date}' 
+
 class Choice(models.Model):
     # ForeignKey - 한 테이블의 특정 필드가 다른 테이블의 행을 참조한다는 것을 의미, Question과 연결, 
     # on_delete: 외래 키가 참조하는 객체가 삭제될 때의 동작을 정의
