@@ -12,6 +12,9 @@ polls/migrations/0001_initial.py 파일을 읽고 데이터베이스에 테이�
 class Question(models.Model):
     question_text = models.CharField(max_length=200) # 최대 길이 200의 char 필드 생성
     pub_date = models.DateTimeField('date published') # datetime 필드 생성 (질문 생성 날짜)
+    #is_something = models.BooleanField(default=False) # 불 값 필드, default=초기값
+    #average_score = models.FloatField(default=0.0) # 소수값 필드
+    # python manage.py migrate polls 0001, 위에 2가지를 추가하고 마이그레이션하면 0002가 생기는데, 0001로 되돌리고, 변경 코드를 지워주면 다시 돌아감 
 
 class Choice(models.Model):
     # ForeignKey - 한 테이블의 특정 필드가 다른 테이블의 행을 참조한다는 것을 의미, Question과 연결, 
