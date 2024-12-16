@@ -2,8 +2,11 @@ from django.db import models
 
 """
 1. 모델 생성
-2. 모델을 테이블에 써 주기 위한 마이그레이션이라는 걸 만든다.
-3. 이 모델에 맞는 테이블을 만든다.
+2. 모델을 테이블에 써 주기 위한 마이그레이션이라는 걸 만든다. (python manage.py makemigrations polls)
+마이그레이션이란?
+**마이그레이션(Migration)**은 Django 모델의 변경 사항(예: 새 모델 추가, 기존 모델 수정)을 데이터베이스에 반영하기 위한 단계
+3. 이 모델에 맞는 테이블을 만든다. (python manage.py migrate)
+polls/migrations/0001_initial.py 파일을 읽고 데이터베이스에 테이블을 생성
 """
 
 class Question(models.Model):
