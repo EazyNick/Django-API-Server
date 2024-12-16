@@ -26,3 +26,6 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE) # Question 저장, Question 유니크한 ID를 저장, 참조된 객체가 삭제되면, 외래 키를 가진 객체도 삭제
     choice_text = models.CharField(max_length=200) # 선택한 선택지 저장
     votes = models.IntegerField(default=0) # 몇개의 투표를 받았는지 저장, 숫자로 저장
+
+    def __str__(self):
+        return self.choice_text
