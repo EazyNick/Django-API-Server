@@ -29,8 +29,10 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+# 장고에 앱(polls)을 등록해줘야 모델 마이그레이션이 가능
 
 INSTALLED_APPS = [
+    'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
