@@ -1,3 +1,4 @@
+[Django Shell]
 Django는 웹 서비스이기 떄문에 글로벌하다. 그래서 시간값을 구할 때, timezone 값도 구해와야 한다.
 from datetime import datetime
 from django.utils import timezone
