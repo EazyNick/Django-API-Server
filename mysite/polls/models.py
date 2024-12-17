@@ -11,6 +11,7 @@ polls/migrations/0001_initial.py 파일을 읽고 데이터베이스에 테이�
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200) # 최대 길이 200의 char 필드 생성
+    pub_date = models.DateTimeField(auto_now_add=True) # 시간 자동 등록
     pub_date = models.DateTimeField('date published') # datetime 필드 생성 (질문 생성 날짜)
     #is_something = models.BooleanField(default=False) # 불 값 필드, default=초기값
     #average_score = models.FloatField(default=0.0) # 소수값 필드
