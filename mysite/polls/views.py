@@ -23,9 +23,10 @@ def some_url(request):
 #     question = Question.objects.get(pk=question_id)
 #     return render(request, 'polls/detail.html', {'question': question})
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
 from django.shortcuts import render , get_object_or_404
+from django.urls import reverse
 
 ...
 def detail(request, question_id):
@@ -38,3 +39,14 @@ def detail(request, question_id):
     # 위 코드를 간략화 하는 방법임 - get_object_or_404
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist): # 아무것도 choice하지 않은 경우
+        return render(request, 'polls/detail.html', {'question': question, 'error_message': '선택이 없습니다.'})
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        return HttpResponseRedirect(reverse('polls:index'))

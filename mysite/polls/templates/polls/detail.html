@@ -1,6 +1,32 @@
-<h1>{{ question.question_text }}</h1>
+<!-- <h1>{{ question.question_text }}</h1>
 <ul>
 {% for choice in question.choice_set.all %}
     <li>{{ choice.choice_text }}</li>
 {% endfor %}
-</ul>
+</ul> -->
+
+
+<!-- 
+<form> 태그: 폼 데이터를 서버로 보내는 역할.
+action='#': 폼이 제출되었을 때 데이터를 보낼 URL 경로. 현재 #는 현재 페이지를 의미.
+method='post': HTTP POST 메서드를 사용하여 데이터를 서버로 전송함. 보통 데이터를 변경하거나 제출할 때 사용. 
+-->
+<form action="{% url 'polls:vote' question.id %}" method="post">
+    <!-- Django에서 CSRF (Cross-Site Request Forgery) 보안을 위한 토큰 삽입 -->
+    {% csrf_token %}
+    <h1>{{ question.question_text }}</h1>
+    {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    
+    {% for choice in question.choice_set.all %}
+        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+        <label for="choice{{ forloop.counter }}">
+            {{ choice.choice_text }}
+        </label>
+        <br>
+    {% endfor %}
+
+<!-- 폼을 서버에 제출하는 버튼. -->
+<input type="submit" value="Vote">
+</form>
