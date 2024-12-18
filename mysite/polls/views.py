@@ -18,3 +18,7 @@ def index(request):
 
 def some_url(request):
     return HttpResponse("Some ulr을 구현해 봤습니다.")
+
+def detail(request, question_id):
+    question = Question.objects.get(pk=question_id)
+    return render(request, 'polls/detail.html', {'question': question})
