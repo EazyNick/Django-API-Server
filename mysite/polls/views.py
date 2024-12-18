@@ -52,6 +52,19 @@ def detail(request, question_id):
 #         selected_choice.save()
 #         return HttpResponseRedirect(reverse('polls:index'))
     
+# def vote(request, question_id):
+#     question = get_object_or_404(Question, pk=question_id)
+#     try:
+#         selected_choice = question.choice_set.get(pk=request.POST['choice'])
+#     except (KeyError, Choice.DoesNotExist):
+#         return render(request, 'polls/detail.html', {'question': question, 'error_message': f"선택이 없습니다. id={request.POST['choice']}"})
+#     else:
+#         selected_choice.votes += 1
+#         selected_choice.save()
+#         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+    
+from django.db.models import F
+
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
@@ -59,6 +72,10 @@ def vote(request, question_id):
     except (KeyError, Choice.DoesNotExist):
         return render(request, 'polls/detail.html', {'question': question, 'error_message': f"선택이 없습니다. id={request.POST['choice']}"})
     else:
-        selected_choice.votes += 1
+        # A서버에서도 Votes = 1
+        # B서버에서도 Votes = 1
+        # A,B 서버에서 동시에 무언가를 투표할 경우, +2가 아닌 +1이 될 수 있으니 아래처럼 DB자체에서 카운트하게 수정
+        # F는 DB에서의 값을 사용하라는 것
+        selected_choice.votes = F('votes') + 1
         selected_choice.save()
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+        return HttpResponseRedirect(reverse('polls:index'))
