@@ -22,8 +22,8 @@ polls/migrations/0001_initial.py 파일을 읽고 데이터베이스에 테이�
 
 
 class Question(models.Model):
-    question_text = models.CharField(max_length=200, verbose='질문')
-    pub_date = models.DateTimeField(auto_now_add=True, verbose='생성일') 
+    question_text = models.CharField(max_length=200, verbose_name='질문')
+    pub_date = models.DateTimeField(auto_now_add=True, verbose_name='생성일') 
 
     # 이거는 정의된게 아니라, 함수로 구현된 것이기 때문에 데코레이터 사용
     # boolean=True - 최근 생성인 경우 체크표시, 아닌경우 X 아이콘으로 나옴
