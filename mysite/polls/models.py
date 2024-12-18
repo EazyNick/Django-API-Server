@@ -29,4 +29,4 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0) # 몇개의 투표를 받았는지 저장, 숫자로 저장
 
     def __str__(self):
-        return self.choice_text
+        return f'[{self.question.question_text}] {self.choice_text}' # 질문, 선택지 다 보이게 바꿈
