@@ -3,6 +3,7 @@ from polls.models import Question
 from polls_api.serializers import QuestionSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 @api_view(['GET','POST'])  # http요청 허용, 지정하지 않았으니 모든 http 요청을 허용(get, post 등)
 def question_list(request):
@@ -21,6 +22,26 @@ def question_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # 에러기 때문에 400으로 해줘야함.
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def question_detail(request, id):
+    question = get_object_or_404(Question, pk=id)
+    
+    if request.method == 'GET':
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        serializer = QuestionSerializer(question, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:    
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'DELETE':
+        question.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 """
 데이터 생성(Create) : POST
