@@ -6,6 +6,17 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 
+from django.contrib.auth.models import User
+from polls_api.serializers import UserSerializer
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 # Generic API View
 # from polls.models import Question
 # from polls_api.serializers import QuestionSerializer

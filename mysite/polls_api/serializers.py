@@ -4,6 +4,8 @@ from polls.models import Question
 from rest_framework import serializers
 from polls.models import Question
 
+from django.contrib.auth.models import User
+
 class QuestionSerializer(serializers.ModelSerializer):
     """
     만들어진 모델이 있다면, 더 쉽게 불러올 수 있다.
@@ -11,6 +13,13 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ['id','question_text', 'pub_date']
+
+class UserSerializer(serializers.ModelSerializer):
+    questions = serializers.PrimaryKeyRelatedField(many=True, queryset=Question.objects.all())
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'questions']
 
 # class QuestionSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True) # 클라이언트가 데이터를 제공할 수 없게 함(read_only)
