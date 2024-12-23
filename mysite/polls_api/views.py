@@ -6,6 +6,19 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 
+# Generic API View
+# from polls.models import Question
+# from polls_api.serializers import QuestionSerializer
+# from rest_framework import generics
+
+# class QuestionList(generics.ListCreateAPIView):
+#     queryset = Question.objects.all()
+#     serializer_class = QuestionSerializer
+
+# class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Question.objects.all()
+#     serializer_class = QuestionSerializer
+
 # Mixin 기반 view 구현
 # from polls.models import Question
 # from polls_api.serializers import QuestionSerializer
