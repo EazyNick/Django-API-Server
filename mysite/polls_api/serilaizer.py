@@ -8,10 +8,17 @@ class QuestionSerializer(serializers.Serializer):
 
     # validated_data는 입력된 데이터가 유효성 검사를 통과한 후 제공됨
     def create(self, validated_data):
+        """
+        예시: serializer = QuestionSerializer(data=data)
+        """
         return Question.objects.create(**validated_data)
 
     # instance는 기존의 Question 모델 인스턴스
     def update(self, instance, validated_data):
+        """
+        예시: serializer = QuestionSerializer(new_question, data=data)
+        """
         instance.question_text = validated_data.get('question_text', instance.question_text)
         instance.save()
         return instance
+    
