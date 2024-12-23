@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls), # 기본적으로 제공되는 어드민 관리 페이지
     path("polls/", include('polls.urls')),
+    path('rest/', include('polls_api.urls')),
 ]
