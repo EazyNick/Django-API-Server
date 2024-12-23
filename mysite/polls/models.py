@@ -20,10 +20,13 @@ polls/migrations/0001_initial.py 파일을 읽고 데이터베이스에 테이�
 #     #average_score = models.FloatField(default=0.0) # 소수값 필드
 #     # python manage.py migrate polls 0001, 위에 2가지를 추가하고 마이그레이션하면 0002가 생기는데, 0001로 되돌리고, 변경 코드를 지워주면 다시 돌아감 
 
-
 class Question(models.Model):
     question_text = models.CharField(max_length=200, verbose_name='질문')
     pub_date = models.DateTimeField(auto_now_add=True, verbose_name='생성일') 
+    # 여러 개의 Question 객체가 하나의 User 객체에 연결될 수 있습니다.
+    # 각 질문이 어느 사용자(auth.User)에 의해 생성되었는지를 나타냅니다.
+    # related_name은 외래 키로 연결된 모델에서 이 관계를 역참조할 때 사용할 이름을 정의, user.questions.all(), 설정하지 않으면 question_set으로 가져옴
+    owner = models.ForeignKey('auth.User', related_name='questions', on_delete=models.CASCADE, null=True)
 
     # 이거는 정의된게 아니라, 함수로 구현된 것이기 때문에 데코레이터 사용
     # boolean=True - 최근 생성인 경우 체크표시, 아닌경우 X 아이콘으로 나옴
