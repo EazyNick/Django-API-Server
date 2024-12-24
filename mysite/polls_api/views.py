@@ -22,6 +22,22 @@ from polls_api.serializers import RegisterSerializer
 class RegisterUser(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
+from rest_framework import generics,permissions
+from .permissions import IsOwnerOrReadOnly
+
+class QuestionList(generics.ListCreateAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
 # Generic API View
 # from polls.models import Question
 # from polls_api.serializers import QuestionSerializer
@@ -70,38 +86,38 @@ class RegisterUser(generics.CreateAPIView):
 #         return self.destroy(request, *args, **kwargs)
 
 # Class 기반의 뷰(Views)
-class QuestionList(APIView):
-    def get(self, request):
-        questions = Question.objects.all()
-        serializer = QuestionSerializer(questions, many=True)
-        return Response(serializer.data)
+# class QuestionList(APIView):
+#     def get(self, request):
+#         questions = Question.objects.all()
+#         serializer = QuestionSerializer(questions, many=True)
+#         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = QuestionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         serializer = QuestionSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class QuestionDetail(APIView):
-    def get(self, request, id):
-        question = get_object_or_404(Question, pk=id)
-        serializer = QuestionSerializer(question)
-        return Response(serializer.data)
+# class QuestionDetail(APIView):
+#     def get(self, request, id):
+#         question = get_object_or_404(Question, pk=id)
+#         serializer = QuestionSerializer(question)
+#         return Response(serializer.data)
 
-    def put(self, request, id):
-        question = get_object_or_404(Question, pk=id)
-        serializer = QuestionSerializer(question, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:    
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def put(self, request, id):
+#         question = get_object_or_404(Question, pk=id)
+#         serializer = QuestionSerializer(question, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         else:    
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-    def delete(self, request, id):
-        question = get_object_or_404(Question, pk=id)
-        question.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def delete(self, request, id):
+#         question = get_object_or_404(Question, pk=id)
+#         question.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # @api_view(['GET','POST'])  # http요청 허용, 지정하지 않았으니 모든 http 요청을 허용(get, post 등)
 # def question_list(request):

@@ -41,6 +41,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'password','password2']
 
+class QuestionSerializer(serializers.ModelSerializer):
+    """
+    모델의 필드와 1:1 매핑된 직렬화 필드를 자동으로 생성
+    """
+    # owner 필드는 JSON 출력에 포함되며, Question 모델의 외래 키로 연결된 User 객체의 username 값을 가져옵니다.
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Question # 이 직렬화 클래스가 연결될 모델을 지정
+        fields = ['id', 'question_text', 'pub_date', 'owner']
+
 # class QuestionSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True) # 클라이언트가 데이터를 제공할 수 없게 함(read_only)
 #     question_text = serializers.CharField(max_length=200)
