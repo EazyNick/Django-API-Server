@@ -95,10 +95,21 @@ class UserSerializer(serializers.ModelSerializer):
 #         return instance
     
 from polls.models import Question,Choice, Vote
+from rest_framework.validators import UniqueTogetherValidator
 
-class VoteSerializer(serializers.ModelSerializer):    
-    voter = serializers.ReadOnlyField(source='voter.username')
+class VoteSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if attrs['choice'].question.id != attrs['question'].id:
+            raise serializers.ValidationError("Question과 Choice가 조합이 맞지 않습니다.")
         
+        return attrs
+    
     class Meta:
         model = Vote
         fields = ['id', 'question', 'choice', 'voter']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Vote.objects.all(),
+                fields=['question', 'voter']
+            )
+        ]

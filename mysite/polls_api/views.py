@@ -41,6 +41,8 @@ class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
 from polls.models import Question,Choice, Vote
 from polls_api.serializers import VoteSerializer
 from .permissions import IsOwnerOrReadOnly , IsVoter
+from rest_framework import status
+from rest_framework.response import Response
 
 class VoteList(generics.ListCreateAPIView):
     serializer_class = VoteSerializer
@@ -48,15 +50,24 @@ class VoteList(generics.ListCreateAPIView):
     
     def get_queryset(self, *args, **kwargs):
         return Vote.objects.filter(voter=self.request.user)
-   
-    def perform_create(self, serializer):
-        serializer.save(voter=self.request.user)
-  
+    
+    def create(self, request, *args, **kwargs):
+        new_data = request.data.copy()
+        new_data['voter'] = request.user.id
+        serializer = self.get_serializer(data=new_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
 class VoteDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsVoter]
+    permission_classes = [permissions.IsAuthenticated, IsVoter]
     
+    def perform_update(self, serializer):
+        serializer.save(voter=self.request.user)
+
 # Generic API View
 # from polls.models import Question
 # from polls_api.serializers import QuestionSerializer
