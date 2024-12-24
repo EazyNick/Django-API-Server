@@ -76,3 +76,39 @@ class VoteSerializerTest(TestCase):
         }
         serializer = VoteSerializer(data=data)
         self.assertTrue(serializer.is_valid())
+
+
+# pip install coverage
+# coverage run manage.py test
+from rest_framework.test import APITestCase
+from django.urls import reverse
+from rest_framework import status
+from django.utils import timezone
+
+class QuestionListTest(APITestCase):
+    def setUp(self):
+        self.question_data = {'question_text': 'some question'}
+        self.url = reverse('queston-list')
+    
+    def test_create_question(self):
+        user =User.objects.create(username='testuser', password='testpass')
+        self.client.force_authenticate(user=user)
+        response = self.client.post(self.url, self.question_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Question.objects.count(), 1)
+        question = Question.objects.first()
+        self.assertEqual(question.question_text, self.question_data['question_text'])
+        self.assertEqual((timezone.now - question.pub_date).total_seconds(), 1)
+    
+    def test_create_question_without_authentication(self):
+        response = self.client.post(self.url, self.question_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+ 
+    def test_list_question(self):
+        question = Question.objects.create(question_text='Question1')
+        choice = Choice.objects.create(question=question, choice_text='Question1')
+        Question.objects.create(question_text='Question2')
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['choices'][0]['choice_text'], choice.choice_text)
