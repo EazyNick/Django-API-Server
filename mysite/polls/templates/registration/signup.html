@@ -1,0 +1,8 @@
+<h2>회원가입</h2>
+ <form method="post">
+   {% csrf_token %}
+   <!-- form.as_p는 장고에서 자체적으로 제공하는 로그인 기능 -->
+   <!-- 폼 필드들을 <p> 태그로 감싼 HTML로 렌더링 -->
+   {{ form.as_p }} 
+   <button type="submit">가입하기</button>
+</form>

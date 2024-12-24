@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import *
 
 # % url 'polls:detail' question.id % 처럼, 나중에 detail 이라는 이름의 url이 많아질 수 있으니, polls의 detail이라는 것을 명시하기 위해 사용
 app_name = 'polls'
@@ -10,4 +11,5 @@ urlpatterns = [
     path('<int:question_id>/', views.detail, name='detail'),
     path('<int:question_id>/result', views.result, name='result'),
     path('<int:question_id>/vote/', views.vote, name='vote'), 
+    path('signup/', SignupView.as_view(), )
 ]
