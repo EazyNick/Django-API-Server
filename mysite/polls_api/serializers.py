@@ -2,7 +2,7 @@ from rest_framework import serializers
 from polls.models import Question
 
 from rest_framework import serializers
-from polls.models import Question
+from polls.models import Question, Choice
 
 from django.contrib.auth.models import User
 
@@ -41,16 +41,32 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'password','password2']
 
+class ChoiceSerializer(serializers.ModelSerializer): 
+    class Meta:
+        model = Choice
+        fields = ['choice_text', 'votes']
+
 class QuestionSerializer(serializers.ModelSerializer):
     """
     모델의 필드와 1:1 매핑된 직렬화 필드를 자동으로 생성
     """
     # owner 필드는 JSON 출력에 포함되며, Question 모델의 외래 키로 연결된 User 객체의 username 값을 가져옵니다.
     owner = serializers.ReadOnlyField(source='owner.username')
+    choices_set = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question # 이 직렬화 클래스가 연결될 모델을 지정
-        fields = ['id', 'question_text', 'pub_date', 'owner']
+        fields = ['id', 'question_text', 'pub_date', 'owner', 'choices_set']
+
+class UserSerializer(serializers.ModelSerializer):
+    #questions = serializers.PrimaryKeyRelatedField(many=True, queryset=Question.objects.all())
+    #questions = serializers.StringRelatedField(many=True, read_only=True)
+    #questions = serializers.SlugRelatedField(many=True, read_only=True, slug_field='pub_date')
+    questions = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='question-detail')
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'questions']
 
 # class QuestionSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True) # 클라이언트가 데이터를 제공할 수 없게 함(read_only)

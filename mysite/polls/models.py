@@ -52,9 +52,13 @@ class Question(models.Model):
 class Choice(models.Model):
     # ForeignKey - 한 테이블의 특정 필드가 다른 테이블의 행을 참조한다는 것을 의미, Question과 연결, 
     # on_delete: 외래 키가 참조하는 객체가 삭제될 때의 동작을 정의
-    question = models.ForeignKey(Question, on_delete=models.CASCADE) # Question 저장, Question 유니크한 ID를 저장, 참조된 객체가 삭제되면, 외래 키를 가진 객체도 삭제
+    # question = models.ForeignKey(Question, on_delete=models.CASCADE) # Question 저장, Question 유니크한 ID를 저장, 참조된 객체가 삭제되면, 외래 키를 가진 객체도 삭제
+    question = models.ForeignKey(Question, related_name='choices', on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200) # 선택한 선택지 저장
     votes = models.IntegerField(default=0) # 몇개의 투표를 받았는지 저장, 숫자로 저장
 
     def __str__(self):
-        return f'[{self.question.question_text}] {self.choice_text}' # 질문, 선택지 다 보이게 바꿈
+        return self.choice_text
+
+    # def __str__(self):
+    #     return f'[{self.question.question_text}] {self.choice_text}' # 질문, 선택지 다 보이게 바꿈
