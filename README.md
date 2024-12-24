@@ -109,6 +109,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ['id', 'question_text', 'pub_date', 'owner']
+```
 
 3. API 뷰를 추가했습니다:
 
