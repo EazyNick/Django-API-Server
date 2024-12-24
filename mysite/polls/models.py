@@ -62,3 +62,18 @@ class Choice(models.Model):
 
     # def __str__(self):
     #     return f'[{self.question.question_text}] {self.choice_text}' # 질문, 선택지 다 보이게 바꿈
+
+from django.contrib.auth.models import User
+
+class Vote(models.Model):
+    """
+    투표 기능
+    """
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    voter = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['question', 'voter'], name='unique_voter_for_questions')
+        ]

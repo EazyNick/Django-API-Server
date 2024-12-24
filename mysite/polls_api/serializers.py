@@ -41,10 +41,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'password','password2']
 
-class ChoiceSerializer(serializers.ModelSerializer): 
+class ChoiceSerializer(serializers.ModelSerializer):
+    votes_count = serializers.SerializerMethodField()
+    
     class Meta:
         model = Choice
-        fields = ['choice_text', 'votes']
+        fields = ['choice_text', 'votes_count']
+        
+    def get_votes_count(self, obj):
+        return obj.vote_set.count()
 
 class QuestionSerializer(serializers.ModelSerializer):
     """
