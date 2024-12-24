@@ -30,7 +30,7 @@ class QuestionList(generics.ListCreateAPIView):
     serializer_class = QuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
-    def perform_create(self, serializer):
+    def perform_create(self, serializer): # ListCreateAPIView의 함수를 오버라이딩하여, 
         serializer.save(owner=self.request.user)
 
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
