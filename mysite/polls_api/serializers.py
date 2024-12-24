@@ -21,6 +21,26 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'questions']
 
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+    
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "두 패스워드가 일치하지 않습니다."})
+        return attrs
+    
+    def create(self, validated_data):
+        user = User.objects.create(username=validated_data['username'])
+        user.set_password(validated_data['password'])
+        user.save()
+        
+        return user
+    
+    class Meta:
+        model = User
+        fields = ['username', 'password','password2']
+
 # class QuestionSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True) # 클라이언트가 데이터를 제공할 수 없게 함(read_only)
 #     question_text = serializers.CharField(max_length=200)

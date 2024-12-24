@@ -17,6 +17,11 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+from polls_api.serializers import RegisterSerializer
+
+class RegisterUser(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+
 # Generic API View
 # from polls.models import Question
 # from polls_api.serializers import QuestionSerializer
