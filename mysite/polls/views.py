@@ -107,3 +107,22 @@ class SignupView(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('user-list') # 회원가입이 성공적으로 완료된 후 리디렉션할 url.py에 지정된 URL 작성
     template_name = 'registration/signup.html'
+
+from polls.models import Question,Choice, Vote
+from polls_api.serializers import VoteSerializer
+from .permissions import IsOwnerOrReadOnly , IsVoter
+
+class VoteList(generics.ListCreateAPIView):
+    serializer_class = VoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self, *args, **kwargs):
+        return Vote.objects.filter(voter=self.request.user)
+   
+    def perform_create(self, serializer):
+        serializer.save(voter=self.request.user)
+  
+class VoteDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Vote.objects.all()
+    serializer_class = VoteSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsVoter]

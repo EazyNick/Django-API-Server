@@ -94,3 +94,11 @@ class UserSerializer(serializers.ModelSerializer):
 #         instance.save()
 #         return instance
     
+from polls.models import Question,Choice, Vote
+
+class VoteSerializer(serializers.ModelSerializer):    
+    voter = serializers.ReadOnlyField(source='voter.username')
+        
+    class Meta:
+        model = Vote
+        fields = ['id', 'question', 'choice', 'voter']
