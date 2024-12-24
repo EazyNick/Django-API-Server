@@ -52,11 +52,11 @@ class QuestionSerializer(serializers.ModelSerializer):
     """
     # owner 필드는 JSON 출력에 포함되며, Question 모델의 외래 키로 연결된 User 객체의 username 값을 가져옵니다.
     owner = serializers.ReadOnlyField(source='owner.username')
-    choices_set = ChoiceSerializer(many=True, read_only=True)
+    choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question # 이 직렬화 클래스가 연결될 모델을 지정
-        fields = ['id', 'question_text', 'pub_date', 'owner', 'choices_set']
+        fields = ['id', 'question_text', 'pub_date', 'owner', 'choices']
 
 class UserSerializer(serializers.ModelSerializer):
     #questions = serializers.PrimaryKeyRelatedField(many=True, queryset=Question.objects.all())
