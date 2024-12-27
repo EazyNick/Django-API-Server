@@ -1,6 +1,7 @@
 # Django Polls 프로젝트
 
 이 저장소는 Django 기반의 투표 애플리케이션을 단계적으로 구현한 코드입니다. 학습 과정은 다음 블로그 포스트를 참고하여 진행되었습니다:
+(강의 영상은 제작중)
 
 - [1단계: Django 설정 및 모델 생성](https://kimsungjun9987.tistory.com/458)
 - [2단계: Serializer 및 API 추가](https://kimsungjun9987.tistory.com/459)
